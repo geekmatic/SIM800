@@ -1,0 +1,52 @@
+byte SIM800waitFor(String response1, String response2, uint16_t timeOut) {
+  uint16_t entry = 0;
+  uint16_t count = 0;
+  String reply = SIM800read();
+  byte retVal = 99;
+
+  do {
+    reply = SIM800read();
+    delay(1);
+    entry ++;
+  } while ((reply.indexOf(response1) + reply.indexOf(response2) == -2) && entry < timeOut );
+
+  if (entry >= timeOut) {
+    retVal = TIMEOUT;
+  } else {
+    if (reply.indexOf(response1) + reply.indexOf(response2) > -2) retVal = OK;
+    else retVal = NOTOK;
+  }
+
+  return retVal;
+}
+
+byte SIM800command(String command, String response1, String response2, uint16_t timeOut, uint16_t repetitions) {
+  byte returnValue = NOTOK;
+  byte countt = 0;
+  
+  while (countt < repetitions && returnValue != OK) {
+    SER2.println(command);
+    
+    if (SIM800waitFor(response1, response2, timeOut) == OK) {
+      returnValue = OK;
+    } else {returnValue = NOTOK;}
+    countt++;
+  }
+  
+  return returnValue;
+}
+
+String SIM800read() {
+  String reply = "";
+
+  if (SER2.available())  {
+    reply = SER2.readString();
+  }
+
+  if (reply!=""){
+    SER1.print("Reply: ");
+    SER1.println(reply);
+  }
+  
+  return reply;
+}
