@@ -1,3 +1,7 @@
+#define OK 1
+#define NOTOK 2
+#define TIMEOUT 3
+
 byte SIM800waitFor(String response1, String response2, uint16_t timeOut) {
   uint16_t entry = 0;
   uint16_t count = 0;
