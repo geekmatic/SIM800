@@ -25,7 +25,7 @@ byte SIM800command(String command, String response1, String response2, uint16_t 
   byte countt = 0;
   
   while (countt < repetitions && returnValue != OK) {
-    SER2.println(command);
+    SIM800serial.println(command);
     
     if (SIM800waitFor(response1, response2, timeOut) == OK) {
       returnValue = OK;
@@ -39,13 +39,13 @@ byte SIM800command(String command, String response1, String response2, uint16_t 
 String SIM800read() {
   String reply = "";
 
-  if (SER2.available())  {
-    reply = SER2.readString();
+  if (SIM800serial.available())  {
+    reply = SIM800serial.readString();
   }
 
   if (reply!=""){
-    SER1.print("Reply: ");
-    SER1.println(reply);
+    Serial.print("Reply: ");
+    Serial.println(reply);
   }
   
   return reply;
